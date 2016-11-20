@@ -18,11 +18,11 @@ import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.ExpenseType;
 /**
  * Created by chanuka on 11/20/16.
  */
-public class PersistantAccountDAO implements AccountDAO {
+public class PersistentAccountDAO implements AccountDAO {
     private ExpenseManagerDbHelper dbHelper;
     private Context context;
 
-    public  PersistantAccountDAO(Context ctx){
+    public PersistentAccountDAO(Context ctx){
         this.context = ctx;
         this.dbHelper = ExpenseManagerDbHelper.getDbManInst(ctx);
     }
@@ -96,18 +96,25 @@ public class PersistantAccountDAO implements AccountDAO {
     public void addAccount(Account account) {
         SQLiteDatabase dbw = dbHelper.getWritableDatabase();
 
-        // prepared statement
-        String sql = "INSERT INTO Accounts (accountNo,bankName,accountHolderName,balance) VALUES (?,?,?,?)";
-        SQLiteStatement stmt = dbw.compileStatement(sql);
+        String query = "SELECT accountNo from Accounts WHERE accountNo='"+ account.getAccountNo()+"'";
+
+        Cursor checker = dbw.rawQuery(query,null);
+
+        if (!checker.moveToFirst()) {
+
+            // prepared statement
+            String sql = "INSERT INTO Accounts (accountNo,bankName,accountHolderName,balance) VALUES (?,?,?,?)";
+            SQLiteStatement stmt = dbw.compileStatement(sql);
 
 
-        //Prepared statements use 1-based index, NOT 0.
-        stmt.bindString(1, account.getAccountNo());
-        stmt.bindString(2, account.getBankName());
-        stmt.bindString(3, account.getAccountHolderName());
-        stmt.bindDouble(4, account.getBalance());
+            //Prepared statements use 1-based index, NOT 0.
+            stmt.bindString(1, account.getAccountNo());
+            stmt.bindString(2, account.getBankName());
+            stmt.bindString(3, account.getAccountHolderName());
+            stmt.bindDouble(4, account.getBalance());
 
-        stmt.executeInsert();
+            stmt.executeInsert();
+        }
     }
 
     @Override
@@ -126,7 +133,7 @@ public class PersistantAccountDAO implements AccountDAO {
     public void updateBalance(String accountNo, ExpenseType expenseType, double amount) throws InvalidAccountException {
         SQLiteDatabase dbw = dbHelper.getWritableDatabase();
 
-        String sql = "UPDATE Account SET balance = balance + ? WHERE accountNo=" + accountNo;
+        String sql = "UPDATE Accounts SET balance = balance + ? WHERE accountNo='" + accountNo+"'";
         SQLiteStatement stmt = dbw.compileStatement(sql);
 
         if(expenseType == ExpenseType.EXPENSE){

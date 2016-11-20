@@ -17,11 +17,11 @@ import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.Transaction;
 /**
  * Created by chanuka on 11/20/16.
  */
-public class PersistantTransactionDAO implements TransactionDAO{
+public class PersistentTransactionDAO implements TransactionDAO{
     private ExpenseManagerDbHelper dbHelper;
     private Context context;
 
-    public PersistantTransactionDAO(Context ctx){
+    public PersistentTransactionDAO(Context ctx){
         this.context = ctx;
         this.dbHelper = ExpenseManagerDbHelper.getDbManInst(ctx);
     }
