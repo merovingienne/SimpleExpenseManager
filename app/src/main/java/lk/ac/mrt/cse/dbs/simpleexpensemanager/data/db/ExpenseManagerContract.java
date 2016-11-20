@@ -23,7 +23,8 @@ public class ExpenseManagerContract {
                     Account.COLUMN_NAME_ACCOUNT_NO + TEXT_TYPE + " PRIMARY KEY"+ COMMA_SEP +
                     Account.COLUMN_NAME_BANK_NAME + TEXT_TYPE + COMMA_SEP +
                     Account.COLUMN_NAME_ACCOUNT_HOLDER_NAME + TEXT_TYPE + COMMA_SEP +
-                    Account.COLUMN_NAME_BALANCE + " DECIMAL(9,2)" + " )";
+                    Account.COLUMN_NAME_BALANCE + " DECIMAL(9,2)" +
+                    " );";
 
     private static final String SQL_DELETE_ENTRIES_ACCOUNTS =
             "DROP TABLE IF EXISTS " + Account.TABLE_NAME;
@@ -42,8 +43,10 @@ public class ExpenseManagerContract {
                     Transaction._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                     Transaction.COLUMN_NAME_DATE + " DATE" + COMMA_SEP +
                     Transaction.COLUMN_NAME_ACCOUNT_NO + TEXT_TYPE + COMMA_SEP +
-                    Transaction.COLUMN_NAME_EXPENSE_TYPE + TEXT_TYPE + COMMA_SEP +
-                    Transaction.COLUMN_NAME_AMOUNT + " DECIMAL(9,2)" + " )";
+                    Transaction.COLUMN_NAME_EXPENSE_TYPE + " INT" + COMMA_SEP +
+                    Transaction.COLUMN_NAME_AMOUNT + " DECIMAL(9,2)" + COMMA_SEP +
+                    "FOREIGN KEY (accountNo) REFERENCES Accounts(accountNo)"+
+                    " );";
 
     private static final String SQL_DELETE_ENTRIES_TRANSACTIONS =
             "DROP TABLE IF EXISTS " + Transaction.TABLE_NAME;
